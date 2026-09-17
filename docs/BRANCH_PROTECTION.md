@@ -1,60 +1,66 @@
-# Branch Protection Configuration
+# Main Branch Ruleset
 
-## Required GitHub Settings
+## Active GitHub Configuration
 
-The `main` branch must be configured with the following protection rules:
+The repository uses the active GitHub branch ruleset named **Protect main**.
 
-### Manual Configuration Required
+- **Navigation:** `Settings` → `Rules` → `Rulesets`
+- **Target:** Default branch (`main`)
+- **Bypass list:** Empty
 
-These settings must be configured manually in GitHub:
+## Enabled Protections
 
-1. Go to: `Settings` → `Branches` → `Branch protection rules`
-2. Add rule for pattern: `main`
-3. Enable:
-   - ✅ **Require a pull request before merging**
-   - ✅ **Require status checks to pass before merging**
-     - Add required check: `validate` (from GitHub Actions)
-   - ✅ **Do not allow bypassing the above settings** (intentional quality-gate choice)
-   - ✅ **Do not allow force pushes**
-   - ✅ **Do not allow deletions**
+- ✅ **Require a pull request before merging**
+  - Required approvals: **0** (intentional for this solo repository)
+  - Code Owner review: not required
+  - Latest-push approval: not required
+  - Conversation resolution: not required
+- ✅ **Require status checks to pass**
+  - Required check: `validate` from GitHub Actions
+  - Branches are **not** required to be up to date before merging
+  - `Do not require status checks on creation`: disabled
+- ✅ **Block force pushes**
+- ✅ **Block branch deletion**
 
-### NOT Required for Solo Project
+The ruleset does not restrict branch creation or ordinary updates, require linear history or signed commits, require deployments, use a merge queue, or require code scanning or code-quality checks.
 
-- ❌ Require approvals (this is a solo project)
-- ❌ Require review from Code Owners
-- ❌ Require deployment to succeed before merging
+## Rationale
 
-## Target Production Flow
+- Pull requests preserve reviewable change history before changes reach `main`.
+- GitHub Actions independently verifies the required `validate` check.
+- Approval requirements are intentionally omitted because this is a solo repository.
+- Force-push and deletion protection prevent accidental destruction of branch history.
 
-Once Cloudflare Git/deployment integration is configured, the intended production flow is:
+## Production Flow
+
+### Current
 
 ```
 feature branch
   ↓
 Pull Request
   ↓
-GitHub Actions `validate` (REQUIRED - must pass)
+GitHub Actions `validate`
   ↓
-Merge to main
+merge to protected main
+```
+
+### Future after Cloudflare integration
+
+```
+merge to main
   ↓
 Cloudflare production deployment
 ```
 
-Cloudflare deployment integration is not currently connected or active.
+Cloudflare Git/deployment integration is not currently connected or active.
 
 ## What `validate` Checks
 
-The required status check runs:
+The required GitHub Actions check runs:
 
 1. `format:check` — Code formatting validation
 2. `lint` — ESLint checks
 3. `check` — TypeScript and Astro type checking
 4. `test` — Vitest unit tests
 5. `test:e2e` — Playwright E2E tests
-
-All must pass for the PR to be mergeable.
-
-## Current Status
-
-⚠️ Branch protection must be configured manually via GitHub web UI.
-This bootstrap process cannot configure it automatically without additional permissions.
