@@ -1,0 +1,27 @@
+---
+import { ReactHydrationProbe } from '../components/bootstrap/ReactHydrationProbe';
+import '../styles/global.css';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>When Does It Click?</title>
+  </head>
+  <body>
+    <main>
+      <h1>When Does It Click?</h1>
+      <p>
+        <strong>Status:</strong> Repository Bootstrap v0.1 — Foundation Complete
+      </p>
+      <p>
+        This is the initial repository baseline. Product features have not yet
+        been implemented.
+      </p>
+
+      <ReactHydrationProbe client:load />
+    </main>
+  </body>
+</html>

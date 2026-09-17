@@ -1,0 +1,9 @@
+// Cloudflare Workers Static Assets configuration
+// https://developers.cloudflare.com/workers/static-assets/
+{
+  "name": "when-does-it-click",
+  "compatibility_date": "2026-09-01",
+  "assets": {
+    "directory": "./dist",
+  },
+}
